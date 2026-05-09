@@ -19,5 +19,19 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./backend
+    container_name: study-qa-backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:password@postgres:5432/study_qa_app
+      CORS_ORIGINS: '["http://localhost:3000"]'
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres_data:
