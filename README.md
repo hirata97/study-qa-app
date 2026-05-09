@@ -1,13 +1,14 @@
 # Study Q&A App
 
-Q&A学習アプリ - Next.js + PostgreSQL + Material-UI
+Q&A学習アプリ - Next.js + Python/FastAPI + SQLAlchemy + PostgreSQL + Material-UI
 
 ## 技術スタック
 
 - **フロントエンド**: Next.js 14 (App Router) + TypeScript
 - **UI**: Material-UI (MUI) v5
+- **バックエンド**: Python + FastAPI
 - **データベース**: PostgreSQL 16
-- **ORM**: Prisma
+- **ORM**: SQLAlchemy（Python） / Prisma（既存 Next.js API Routes）
 - **コンテナ**: Docker Compose
 
 ## 機能
@@ -56,13 +57,35 @@ docker-compose up -d
 npm run db:push
 ```
 
-### 6. 開発サーバーの起動
+### 6. Pythonバックエンドの起動
+
+Docker Compose で PostgreSQL と FastAPI を一緒に起動できます：
 
 ```bash
-npm run dev
+docker-compose up -d
+```
+
+ローカル Python で起動する場合：
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+API ドキュメントは http://localhost:8000/docs で確認できます。
+
+### 7. 開発サーバーの起動
+
+```bash
+npm run dev:python
 ```
 
 http://localhost:3000 でアプリケーションにアクセスできます。
+
+`PYTHON_API_URL` を設定しない `npm run dev` では、既存の Next.js API Routes が使われます。
 
 ## 使い方
 
@@ -129,6 +152,14 @@ DELETE /api/questions/:id
 
 ```
 study-qa-app/
+├── backend/
+│   ├── app/
+│   │   ├── main.py        # FastAPI エントリーポイント
+│   │   ├── models.py      # SQLAlchemy モデル
+│   │   ├── schemas.py     # Pydantic スキーマ
+│   │   └── database.py    # DB セッション
+│   ├── Dockerfile
+│   └── requirements.txt
 ├── prisma/
 │   └── schema.prisma       # データベーススキーマ
 ├── src/
@@ -147,6 +178,7 @@ study-qa-app/
 
 ```bash
 npm run dev           # 開発サーバー起動
+npm run dev:python    # Pythonバックエンドにプロキシして開発サーバー起動
 npm run build         # 本番ビルド
 npm run start         # 本番サーバー起動
 npm run lint          # ESLint実行
