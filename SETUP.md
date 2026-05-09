@@ -9,7 +9,7 @@ cd /home/mizuki/projects/study-qa-app
 npm install
 ```
 
-### 2. PostgreSQL起動
+### 2. PostgreSQL + Pythonバックエンド起動
 
 ```bash
 docker-compose up -d
@@ -30,10 +30,12 @@ npm run db:push
 ### 5. 開発サーバー起動
 
 ```bash
-npm run dev
+npm run dev:python
 ```
 
 → http://localhost:3000 にアクセス
+
+Python API のドキュメントは http://localhost:8000/docs で確認できます。
 
 ## 初期データの投入（任意）
 
